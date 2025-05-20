@@ -24,6 +24,7 @@
         </activity>
         <service android:name=".MyServices"/>
         <service android:name=".MyForegroundService"/>
+        <service android:name=".MyIntentService"/>
     </application>
 
 </manifest>

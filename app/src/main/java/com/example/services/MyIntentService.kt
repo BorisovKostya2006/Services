@@ -1,5 +1,6 @@
 package com.example.services
 
+import android.app.IntentService
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -17,40 +18,39 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MyForegroundService : Service() {
+class MyIntentService : IntentService("IntentService") {
 
-    private val scope = CoroutineScope(Dispatchers.Main)
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
-        Log.d("MyForegroundService","onCreate")
+        Log.d("MyIntentService","onCreate")
         createNotificationChannel()
         startForeground(1,createNotification())
 
     }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d("MyForegroundService","onStartCommand")
-        scope.launch {
-            for (i in 0 until  1000){
-                delay(1000)
-                Log.d("MyForegroundService","Timer $i")
-            }
-            stopSelf()
+    override fun onHandleIntent(intent: Intent?) {
+        Log.d("MyIntentService","onHandleIntent")
+        for (i in 0 until  1000){
+            Thread.sleep(1000)
+            Log.d("MyIntentService","Timer $i")
         }
-        return super.onStartCommand(intent, flags, startId)
+
     }
+
+
 
     override fun onDestroy() {
         super.onDestroy()
-        scope.cancel()
-        Log.d("MyForegroundService","onDestroy")
+        Log.d("MyIntentService","onDestroy")
     }
+
+
 
 
     companion object{
         fun newIntent(context: Context) : Intent{
-            return Intent(context, MyForegroundService::class.java)
+            return Intent(context, MyIntentService::class.java)
         }
     }
 
@@ -74,7 +74,5 @@ class MyForegroundService : Service() {
 
 
 
-    override fun onBind(intent: Intent?): IBinder? {
-        TODO("Not yet implemented")
-    }
+
 }
