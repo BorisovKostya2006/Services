@@ -16,15 +16,15 @@ class MyServices : Service() {
     private val scope = CoroutineScope(Dispatchers.Main)
     override fun onCreate() {
         super.onCreate()
-        Log.d("SERVICE","onCreate")
+        Log.d(TAG,"onCreate")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d("SERVICE","onStartCommand")
+        Log.d(TAG,"onStartCommand")
         scope.launch {
             for (i in 0 until  1000){
                 delay(1000)
-                Log.d("SERVICE","Timer $i")
+                Log.d(TAG,"Timer $i")
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -33,11 +33,12 @@ class MyServices : Service() {
     override fun onDestroy() {
         super.onDestroy()
         scope.cancel()
-        Log.d("SERVICE","onDestroy")
+        Log.d(TAG,"onDestroy")
     }
 
 
     companion object{
+        private const val TAG = "SERVICE"
         fun newIntent(context: Context) : Intent{
             return Intent(context, MyServices::class.java)
         }

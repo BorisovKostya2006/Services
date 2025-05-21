@@ -23,18 +23,18 @@ class MyForegroundService : Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
-        Log.d("MyForegroundService","onCreate")
+        Log.d(TAG,"onCreate")
         createNotificationChannel()
         startForeground(1,createNotification())
 
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d("MyForegroundService","onStartCommand")
+        Log.d(TAG,"onStartCommand")
         scope.launch {
             for (i in 0 until  1000){
                 delay(1000)
-                Log.d("MyForegroundService","Timer $i")
+                Log.d(TAG,"Timer $i")
             }
             stopSelf()
         }
@@ -44,11 +44,12 @@ class MyForegroundService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         scope.cancel()
-        Log.d("MyForegroundService","onDestroy")
+        Log.d(TAG,"onDestroy")
     }
 
 
     companion object{
+        private const val TAG = "MyForegroundService"
         fun newIntent(context: Context) : Intent{
             return Intent(context, MyForegroundService::class.java)
         }

@@ -1,18 +1,16 @@
 package com.example.services
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
-import android.app.job.JobService
 import android.app.job.JobWorkItem
 import android.content.ComponentName
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import com.example.services.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private var page = 0
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -39,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         binding.buttonJobService.setOnClickListener {
             val componentName = ComponentName(this, MyJobService::class.java)
 
-            val jobInfo = JobInfo.Builder(1, componentName)
+            val jobInfo = JobInfo.Builder(JOB_ID, componentName)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                 .setRequiresCharging(true)
                 .build()
@@ -48,7 +47,17 @@ class MainActivity : AppCompatActivity() {
             jobScheduler.enqueue(jobInfo, JobWorkItem(intent))
 
         }
-
+        binding.buttonWorkManager.setOnClickListener {
+            val workManager = WorkManager.getInstance(application)
+            workManager.enqueueUniqueWork(
+                MyWorker.MY_NAME,
+                ExistingWorkPolicy.APPEND,
+                MyWorker.makeRequest(page++)
+            )
+        }
+    }
+    companion object{
+        private const val JOB_ID = 1
     }
 
 

@@ -24,7 +24,7 @@ class MyIntentService : IntentService("IntentService") {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
-        Log.d("MyIntentService","onCreate")
+        Log.d(TAG,"onCreate")
         createNotificationChannel()
         startForeground(1,createNotification())
 
@@ -33,7 +33,7 @@ class MyIntentService : IntentService("IntentService") {
         Log.d("MyIntentService","onHandleIntent")
         for (i in 0 until  1000){
             Thread.sleep(1000)
-            Log.d("MyIntentService","Timer $i")
+            Log.d(TAG,"Timer $i")
         }
 
     }
@@ -42,13 +42,14 @@ class MyIntentService : IntentService("IntentService") {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("MyIntentService","onDestroy")
+        Log.d(TAG,"onDestroy")
     }
 
 
 
 
     companion object{
+        private const val TAG = "MyIntentService"
         fun newIntent(context: Context) : Intent{
             return Intent(context, MyIntentService::class.java)
         }
